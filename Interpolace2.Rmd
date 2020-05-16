@@ -1,0 +1,182 @@
+---
+title: "Interpolace polynomem"
+output: "html_document"
+---
+
+Interpolaci používáme pokud máme nějakou funkci zadanou určitými body a chceme zjistit jak by se tato funkce mezi těmito body chovala. Existuje několik metod pro výpočet interpolačních polynomů, které si dále popíšeme. Cílem je aby tento polynom napodoboval původní funkci. Obecně platí čím více bodů známe a dosadíme do výpočtu, tím přesnější interpolaci získáme, jak je předvedeno na grafech s n známými body.
+
+```{r echo=FALSE}
+#xs a ys jsou zname body funkce, x jsou hledane body
+lagrangeInterpolation<- function(x, xs, ys){
+  n <- length(xs)
+  sum <- 0
+  for(i in 1:n){
+    pie <- 1 #pi je 1 pro vypocet dalsiho Li(x)
+    for(j in 1:n){
+      if(i != j){
+        #vypočítáme fundamentální polynom Li(x)
+        pie<- pie * (x - xs[j])/(xs[i] - xs[j])
+      }
+    }
+    #přičte se dalsi cast Li(x)*f(xi)
+    sum <- sum + ys[i] * pie  
+  }
+  return(sum)
+}
+###GRAFY
+#vzorkovani dané funkce (známé body 3)
+xs <- seq(-10,10,by=10) 
+ys <- sin(xs)
+
+
+#vzorkování lagrange
+x <- seq(-10,10,by=0.1) 
+y <- lagrangeInterpolation(x,xs,ys)
+
+yreal <- sin(x)
+
+#graf
+plot(x,y,type="l", main = "n=3")  #lagrange 
+points(xs,ys,col="red")   #zname body
+lines(x,yreal,col="green", lty = 2)    #realna funkce
+
+legend(x="topright",c("Lagrange","Zadana funkce","Zname body"),
+       cex=.8,col=c("black","green","red"), lty=c(1,2,0), pch=c(-1,-1,1))
+
+#vzorkovani dané funkce (známé body 5)
+xs2 <- seq(-10,10,by=5) 
+ys <- sin(xs2)
+
+#vzorkování lagrange
+x <- seq(-10,10,by=0.1) 
+y <- lagrangeInterpolation(x,xs2,ys)
+
+#graf
+plot(x,y,type="l", main = "n=5")  #lagrange 
+points(xs2,ys,col="red")   #zname body
+lines(x,yreal,col="green", lty = 2)    #realna funkce
+
+legend(x="topright",c("Lagrange","Zadana funkce","Zname body"),
+       cex=.8,col=c("black","green","red"), lty=c(1,2,0), pch=c(-1,-1,1))
+
+#vzorkovani dané funkce (známé body 11)
+xs3 <- seq(-10,10,by=2) 
+ys <- sin(xs3)
+
+#vzorkování lagrange
+x <- seq(-10,10,by=0.1) 
+y <- lagrangeInterpolation(x,xs3,ys)
+
+#graf
+plot(x,y,type="l", main = "n=11")  #lagrange 
+points(xs3,ys,col="red")   #zname body
+lines(x,yreal,col="green", lty = 2)    #realna funkce
+
+legend(x="topright",c("Lagrange","Zadana funkce","Zname body"),
+       cex=.8,col=c("black","green","red"), lty=c(1,2,0), pch=c(-1,-1,1))
+
+#vzorkovani dané funkce (známé body 21)
+xs4 <- seq(-10,10,by=1) 
+ys <- sin(xs4)
+
+#vzorkování lagrange
+x <- seq(-10,10,by=0.1) 
+y <- lagrangeInterpolation(x,xs4,ys)
+
+#graf
+plot(x,y,type="l", main = "n=21")  #lagrange 
+points(xs4,ys,col="red")   #zname body
+lines(x,yreal,col="green", lty = 2)    #realna funkce
+
+legend(x="topright",c("Lagrange","Zadana funkce","Zname body"),
+       cex=.8,col=c("black","green","red"), lty=c(1,2,0), pch=c(-1,-1,1))
+```
+
+
+## Stupeň polynomu
+
+
+$$f(x)=a_n x^n + a_{n-1} x^{n-1} +...+a_2x^2 + a_1x + a_0$$
+
+# Vandermondova matice
+Vandermodova matice je matice kde každý řádek tvoří geometrickou posloupnost.
+
+
+$$V=
+\begin{bmatrix}
+1 & a_1 & a_1^2 & ... & a_1^{n-1}\\
+1 & a_2 & a_2^2 & ... & a_2^{n-1}\\
+1 & a_3 & a_3^2 & ... & a_3^{n-1}\\
+\vdots & \vdots & \vdots &  & \vdots\\
+1 & a_m & a_m^2 & ... & a_m^{n-1}
+\end{bmatrix}$$
+
+
+takže platí
+
+$$V_{ij}=a_i^{j-1}$$
+
+### Algoritmus výčtu Vandermondovo matice:  
+
+```{r include=TRUE}
+vandermonde.matrix <- function( alpha, n )
+{
+  # Tato funkce vrací m x n matici mocnin vektoru alfa
+  #
+  # alpha = m dimenze vektor
+  # n = stupen polynomu
+  
+  if ( !is.vector( alpha ) )
+    stop( "parametr alpha není vektor" )
+  if ( !is.numeric( alpha ) )
+    stop( "parametr n není číselný vektor" )
+  m <- length( alpha )
+  V <- matrix( 0, nrow=m, ncol=n )
+  V[,1] <- rep( 1, m ) #prvni sloupec jsou vzdy jednicky
+  j <- 2
+  while ( j <= n ) {
+    x <- alpha ^ ( j - 1 )   #umocnim podle toho v jakem jsem sloupci
+    V[,j] <- x
+    j <- j + 1     #zvetseni mocniny pro dalsi sloupec
+  }
+  return( V )
+}
+```
+# Lagrangeův interpolační polynom
+
+### Definice
+Máme daný soubor n+1 bodů  
+
+$$(x_0, y_0),...,(x_i, y_i),...,(x_n, y_n)$$
+
+kde žádná $x_i$ nejsou stejná, interpolační polynom Lagrangeovo tvaru je lineární kombinací  
+
+$$P_n(x)=\sum_{i=0}^n L_i(x) y_i$$
+
+Lagrangeova fundamentálních polynomů  
+
+$$L_i=\prod_{i=0, i\neq j}^n \frac{x-x_i}{x_j-x_i}$$
+
+### Algoritmus výpočtu:  
+
+```{r include=TRUE}
+#xs a ys jsou zname body funkce, x jsou hledane body
+lagrangeInterpolation<- function(x, xs, ys){
+  n <- length(xs)
+  sum <- 0
+  for(i in 1:n){
+    pie <- 1 #pi je 1 pro vypocet dalsiho Li(x)
+    for(j in 1:n){
+      if(i != j){
+        #vypočítáme fundamentální polynom Li(x)
+        pie<- pie * (x - xs[j])/(xs[i] - xs[j])
+      }
+    }
+    #přičte se dalsi cast Li(x)*f(xi)
+    sum <- sum + ys[i] * pie  
+  }
+  return(sum)
+}
+```
+
+
