@@ -2,8 +2,17 @@
 title: "Interpolace polynomem"
 output: "html_document"
 ---
+## Polynom
 
-Interpolaci používáme pokud máme nějakou funkci zadanou určitými body a chceme zjistit jak by se tato funkce mezi těmito body chovala. Existuje několik metod pro výpočet interpolačních polynomů, které si dále popíšeme. Cílem je aby tento polynom napodoboval původní funkci. Obecně platí čím více bodů známe a dosadíme do výpočtu, tím přesnější interpolaci získáme, jak je předvedeno na grafech s n známými body.
+Polynom stupně n je mnohočlen zapsaný ve tvaru:
+$$p(x)=a_n x^n + a_{n-1} x^{n-1} +...+a_2x^2 + a_1x + a_0$$
+kde $x$ je proměnná a čísla $a_i$ jsou koeficienty polynomu $(a_n \neq 0).$ Koeficienty polynomu jsou zpravidla celá nebo reálná čísla. Stupněm polynomu $p(x)$ rozumíme nejvyšší exponent proměnné $x$ s nenulovým koeficientem.
+U následujících metod platí, že pokud známe $n$ bodů, z výpočtu dostaneme interpolační polynom stupně $n-1$.
+Takže pokud známe 2 body provádíme interpolaci přímkou, pokud známe body 3 interpolujeme parabolou a tak dále.
+
+## Interpolace
+
+Interpolaci používáme pokud máme nějakou funkci zadanou určitými body a chceme zjistit jak by se tato funkce mezi těmito body chovala. Např. pokud máme funkci $f(x)$ a známe její hodnotu v bodech $f(x_0), f(x_1),..f(x_n)$ interpolací nalezneme funkční hodnoty $f(x)$, pokud platí, že $x_0 < x < x_n$. Existuje několik metod pro výpočet interpolačních polynomů, které si dále popíšeme. Cílem je aby tento polynom napodoboval původní funkci. Obecně platí čím více bodů známe a dosadíme do výpočtu, tím přesnější interpolaci získáme, jak je předvedeno dále na grafech s n známými body.
 
 ```{r echo=FALSE}
 #xs a ys jsou zname body funkce, x jsou hledane body
@@ -93,10 +102,7 @@ legend(x="topright",c("Lagrange","Zadana funkce","Zname body"),
 ```
 
 
-## Stupeň polynomu
 
-
-$$f(x)=a_n x^n + a_{n-1} x^{n-1} +...+a_2x^2 + a_1x + a_0$$
 
 # Vandermondova matice
 Vandermodova matice je matice kde každý řádek tvoří geometrickou posloupnost.
