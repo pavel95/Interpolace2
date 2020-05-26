@@ -148,6 +148,30 @@ vandermonde.matrix <- function( alpha, n )
   return( V )
 }
 ```
+
+Příklad:
+
+```{r}
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+
+A <- c(-2,-1,0,1,2)
+V <- vandermonde.matrix(A,5)
+```
+
+$$
+`r write_matex2(V)`
+$$
 # Lagrangeův interpolační polynom
 
 ### Definice

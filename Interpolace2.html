@@ -412,10 +412,26 @@ summary {
   }
   return( V )
 }</code></pre>
+<p>Příklad:</p>
+<pre class="r"><code>write_matex2 &lt;- function(x) {
+  begin &lt;- &quot;\\begin{bmatrix}&quot;
+  end &lt;- &quot;\\end{bmatrix}&quot;
+  X &lt;-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = &quot;&amp;&quot;),
+        &quot;\\\\&quot;
+      )
+    })
+  paste(c(begin, X, end), collapse = &quot;&quot;)
+}
+
+A &lt;- c(-2,-1,0,1,2)
+V &lt;- vandermonde.matrix(A,5)</code></pre>
+<p><span class="math display">\[
+\begin{bmatrix}1&amp;-2&amp;4&amp;-8&amp;16 \\1&amp;-1&amp;1&amp;-1&amp;1 \\1&amp;0&amp;0&amp;0&amp;0 \\1&amp;1&amp;1&amp;1&amp;1 \\1&amp;2&amp;4&amp;8&amp;16 \\\end{bmatrix}
+\]</span> # Lagrangeův interpolační polynom</p>
 </div>
-</div>
-<div id="lagrangeův-interpolační-polynom" class="section level1">
-<h1>Lagrangeův interpolační polynom</h1>
 <div id="definice" class="section level3">
 <h3>Definice</h3>
 <p>Máme daný soubor n+1 bodů</p>
