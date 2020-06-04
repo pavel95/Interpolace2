@@ -110,17 +110,35 @@ Vandermodova matice je matice kde každý řádek tvoří geometrickou posloupno
 
 $$V=
 \begin{bmatrix}
-1 & a_1 & a_1^2 & ... & a_1^{n-1}\\
-1 & a_2 & a_2^2 & ... & a_2^{n-1}\\
-1 & a_3 & a_3^2 & ... & a_3^{n-1}\\
+1 & x_1 & x_1^2 & ... & x_1^{n-1}\\
+1 & x_2 & x_2^2 & ... & x_2^{n-1}\\
+1 & x_3 & x_3^2 & ... & x_3^{n-1}\\
 \vdots & \vdots & \vdots &  & \vdots\\
-1 & a_m & a_m^2 & ... & a_m^{n-1}
+1 & x_m & x_m^2 & ... & x_m^{n-1}
 \end{bmatrix}$$
 
 
 takže platí
 
 $$V_{ij}=a_i^{j-1}$$
+
+Vandermodovo matici můžeme využit k získání interpolačního polynomu. Ze souřadnic osy x známých bodů sestavíme Vandermondovo matici a tu pak položíme rovnu souřadnicím osy y těchto bodů. Tímto procesem získáme funkci, která musí procházet zadanými body. Výsledkem jsou koeficienty interpolačního polynomu. Pro počítání a dosazování za x v interpolačním polynomu můžeme použít Hornerovo schéma, pro jednodužší a rychlejší výpočet. Stručně řečeno se jedná o opakované vytknutí neznámé.
+
+$$
+\begin{bmatrix}
+1 & x_1 & x_1^2 & ... & x_1^{n-1}\\
+1 & x_2 & x_2^2 & ... & x_2^{n-1}\\
+1 & x_3 & x_3^2 & ... & x_3^{n-1}\\
+\vdots & \vdots & \vdots &  & \vdots\\
+1 & x_m & x_m^2 & ... & x_m^{n-1}
+\end{bmatrix}
+\begin{bmatrix}
+a_1\\a_2\\a_3\\\vdots\\a_m
+\end{bmatrix}=
+\begin{bmatrix}
+y_1\\y_2\\y_3\\\vdots\\y_m
+\end{bmatrix}
+$$
 
 ### Algoritmus výčtu Vandermondovo matice:  
 
@@ -149,9 +167,29 @@ vandermonde.matrix <- function( alpha, n )
 }
 ```
 
-Příklad:
+### Algoritmus hornerova schématu
 
 ```{r}
+horner<-function(x,a) #x- funkcni hodnota v danych bodech, a- poly. fce ve tvaru a+bx+cx^2... (koeficienty)
+{
+  
+  n<-length(a)   #n= stupen polynomu (3=x^2)
+  res<-a[n]      #do res ulozim nejvyssi clen
+  if(n==1)       #kdyz je polynom stupne 0, neni co pocitat
+    return (res)
+  for(i in (n-1):1)  
+  {
+    res<-res*x+a[i]    #algoritmus pocitani zavorek,  x(x(d+c)+b)+a
+    #n uz v res je. Vzdy nasobim s x, a zacinam s pricitanim n-1..n=1
+  }
+  
+  return (res)
+}
+```
+
+Příklad:
+
+```{r include = FALSE}
 write_matex2 <- function(x) {
   begin <- "\\begin{bmatrix}"
   end <- "\\end{bmatrix}"
@@ -165,13 +203,15 @@ write_matex2 <- function(x) {
   paste(c(begin, X, end), collapse = "")
 }
 
-A <- c(-2,-1,0,1,2)
-V <- vandermonde.matrix(A,5)
+x_van <- -2:2
+y_van <- x_van ^2
+V <- vandermonde.matrix(x_van,length(x_van))
 ```
 
 $$
 `r write_matex2(V)`
 $$
+
 # Lagrangeův interpolační polynom
 
 ### Definice

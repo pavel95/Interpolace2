@@ -380,14 +380,30 @@ summary {
 <p>Vandermodova matice je matice kde každý řádek tvoří geometrickou posloupnost.</p>
 <p><span class="math display">\[V=
 \begin{bmatrix}
-1 &amp; a_1 &amp; a_1^2 &amp; ... &amp; a_1^{n-1}\\
-1 &amp; a_2 &amp; a_2^2 &amp; ... &amp; a_2^{n-1}\\
-1 &amp; a_3 &amp; a_3^2 &amp; ... &amp; a_3^{n-1}\\
+1 &amp; x_1 &amp; x_1^2 &amp; ... &amp; x_1^{n-1}\\
+1 &amp; x_2 &amp; x_2^2 &amp; ... &amp; x_2^{n-1}\\
+1 &amp; x_3 &amp; x_3^2 &amp; ... &amp; x_3^{n-1}\\
 \vdots &amp; \vdots &amp; \vdots &amp;  &amp; \vdots\\
-1 &amp; a_m &amp; a_m^2 &amp; ... &amp; a_m^{n-1}
+1 &amp; x_m &amp; x_m^2 &amp; ... &amp; x_m^{n-1}
 \end{bmatrix}\]</span></p>
 <p>takže platí</p>
 <p><span class="math display">\[V_{ij}=a_i^{j-1}\]</span></p>
+<p>Vandermodovo matici můžeme využit k získání interpolačního polynomu. Ze souřadnic osy x známých bodů sestavíme Vandermondovo matici a tu pak položíme rovnu souřadnicím osy y těchto bodů. Tímto procesem získáme funkci, která musí procházet zadanými body. Výsledkem jsou koeficienty interpolačního polynomu.</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+1 &amp; x_1 &amp; x_1^2 &amp; ... &amp; x_1^{n-1}\\
+1 &amp; x_2 &amp; x_2^2 &amp; ... &amp; x_2^{n-1}\\
+1 &amp; x_3 &amp; x_3^2 &amp; ... &amp; x_3^{n-1}\\
+\vdots &amp; \vdots &amp; \vdots &amp;  &amp; \vdots\\
+1 &amp; x_m &amp; x_m^2 &amp; ... &amp; x_m^{n-1}
+\end{bmatrix}
+\begin{bmatrix}
+a_1\\a_2\\a_3\\\vdots\\a_m
+\end{bmatrix}=
+\begin{bmatrix}
+y_1\\y_2\\y_3\\\vdots\\y_m
+\end{bmatrix}
+\]</span></p>
 <div id="algoritmus-výčtu-vandermondovo-matice" class="section level3">
 <h3>Algoritmus výčtu Vandermondovo matice:</h3>
 <pre class="r"><code>vandermonde.matrix &lt;- function( alpha, n )
@@ -412,26 +428,32 @@ summary {
   }
   return( V )
 }</code></pre>
+</div>
+<div id="algoritmus-hornerova-schématu" class="section level3">
+<h3>Algoritmus hornerova schématu</h3>
+<pre class="r"><code>horner&lt;-function(x,a) #x- funkcni hodnota v danych bodech, a- poly. fce ve tvaru a+bx+cx^2... (koeficienty)
+{
+  
+  n&lt;-length(a)   #n= stupen polynomu (3=x^2)
+  res&lt;-a[n]      #do res ulozim nejvyssi clen
+  if(n==1)       #kdyz je polynom stupne 0, neni co pocitat
+    return (res)
+  for(i in (n-1):1)  
+  {
+    res&lt;-res*x+a[i]    #algoritmus pocitani zavorek,  x(x(d+c)+b)+a
+    #n uz v res je. Vzdy nasobim s x, a zacinam s pricitanim n-1..n=1
+  }
+  
+  return (res)
+}</code></pre>
 <p>Příklad:</p>
-<pre class="r"><code>write_matex2 &lt;- function(x) {
-  begin &lt;- &quot;\\begin{bmatrix}&quot;
-  end &lt;- &quot;\\end{bmatrix}&quot;
-  X &lt;-
-    apply(x, 1, function(x) {
-      paste(
-        paste(x, collapse = &quot;&amp;&quot;),
-        &quot;\\\\&quot;
-      )
-    })
-  paste(c(begin, X, end), collapse = &quot;&quot;)
-}
-
-A &lt;- c(-2,-1,0,1,2)
-V &lt;- vandermonde.matrix(A,5)</code></pre>
 <p><span class="math display">\[
 \begin{bmatrix}1&amp;-2&amp;4&amp;-8&amp;16 \\1&amp;-1&amp;1&amp;-1&amp;1 \\1&amp;0&amp;0&amp;0&amp;0 \\1&amp;1&amp;1&amp;1&amp;1 \\1&amp;2&amp;4&amp;8&amp;16 \\\end{bmatrix}
-\]</span> # Lagrangeův interpolační polynom</p>
+\]</span></p>
 </div>
+</div>
+<div id="lagrangeův-interpolační-polynom" class="section level1">
+<h1>Lagrangeův interpolační polynom</h1>
 <div id="definice" class="section level3">
 <h3>Definice</h3>
 <p>Máme daný soubor n+1 bodů</p>
