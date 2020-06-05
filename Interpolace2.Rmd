@@ -120,7 +120,7 @@ $$V=
 
 takže platí
 
-$$V_{ij}=a_i^{j-1}$$
+$$V_{ij}=x_i^{j-1}$$
 
 Vandermodovo matici můžeme využit k získání interpolačního polynomu. Ze souřadnic osy x známých bodů sestavíme Vandermondovo matici a tu pak položíme rovnu souřadnicím osy y těchto bodů. Tímto procesem získáme funkci, která musí procházet zadanými body. Výsledkem jsou koeficienty interpolačního polynomu. Pro počítání a dosazování za x v interpolačním polynomu můžeme použít Hornerovo schéma, pro jednodužší a rychlejší výpočet. Stručně řečeno se jedná o opakované vytknutí neznámé.
 
@@ -187,7 +187,7 @@ horner<-function(x,a) #x- funkcni hodnota v danych bodech, a- poly. fce ve tvaru
 }
 ```
 
-Příklad:
+Pro příklad, pokud budeme mít body se souřadnicemi $[-2;4], [-1;1], [0;0], [1,1]$ a $[2;4]$ (body funkce $x^2$), Vandermondtova matice bude vypadat takto:
 
 ```{r include = FALSE}
 write_matex2 <- function(x) {
@@ -211,6 +211,30 @@ V <- vandermonde.matrix(x_van,length(x_van))
 $$
 `r write_matex2(V)`
 $$
+
+a následujícím postupem můžeme získat interpolaci.
+
+```{r}
+#zname body
+xs <- seq(-2,2,by=1) 
+ys <- xs*xs
+
+#nezname body (x osa)
+x<- seq(-2,2,by=0.1)
+
+y<-x^2 #opravdova funkce
+
+A <- vandermonde.matrix(xs, length(xs))   #Vandermodovo matice z hodnot znamych bodu osy X
+B <- solve(A,ys)  #interpolacni polynom (koeficienty)
+
+#dosazeni za x do polynomu
+res2 <- horner(x,B)
+
+#graf
+plot(x,res2, type="l") #interpolace
+points(xs,ys, col="red") #zname body
+lines(x,y, col="green", lty=2) #opravdova funkce
+```
 
 # Lagrangeův interpolační polynom
 
