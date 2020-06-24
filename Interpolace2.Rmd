@@ -7,7 +7,7 @@ output: "html_document"
 Polynom stupně n je mnohočlen zapsaný ve tvaru:
 $$p(x)=a_n x^n + a_{n-1} x^{n-1} +...+a_2x^2 + a_1x + a_0$$
 kde $x$ je proměnná a čísla $a_i$ jsou koeficienty polynomu $(a_n \neq 0).$ Koeficienty polynomu jsou zpravidla celá nebo reálná čísla. Stupněm polynomu $p(x)$ rozumíme nejvyšší exponent proměnné $x$ s nenulovým koeficientem.
-U následujících metod platí, že pokud známe $n$ bodů, z výpočtu dostaneme interpolační polynom stupně $n-1$.
+U následujících interpolačních metod platí, že pokud známe $n$ bodů, z výpočtu dostaneme interpolační polynom stupně $n-1$.
 Takže pokud známe 2 body provádíme interpolaci přímkou, pokud známe body 3 interpolujeme parabolou a tak dále.
 
 ## Interpolace
@@ -16,13 +16,17 @@ Interpolaci používáme pokud máme nějakou funkci zadanou určitými body a c
 
 ```{r echo=FALSE}
 #xs a ys jsou zname body funkce, x jsou hledane body
-lagrangeInterpolation<- function(x, xs, ys){
+lagrangeInterpolation<- function(x, xs, ys)
+{
   n <- length(xs)
   sum <- 0
-  for(i in 1:n){
+  for(i in 1:n)
+  {
     pie <- 1 #pi je 1 pro vypocet dalsiho Li(x)
-    for(j in 1:n){
-      if(i != j){
+    for(j in 1:n)
+    {
+      if(i != j)
+      {
         #vypočítáme fundamentální polynom Li(x)
         pie<- pie * (x - xs[j])/(xs[i] - xs[j])
       }
@@ -32,6 +36,7 @@ lagrangeInterpolation<- function(x, xs, ys){
   }
   return(sum)
 }
+
 ###GRAFY
 #vzorkovani dané funkce (známé body 3)
 xs <- seq(-10,10,by=10) 
@@ -190,11 +195,13 @@ horner<-function(x,a) #x- funkcni hodnota v danych bodech, a- poly. fce ve tvaru
 Pro příklad, pokud budeme mít body se souřadnicemi $[-2;4], [-1;1], [0;0], [1,1]$ a $[2;4]$ (body funkce $x^2$), Vandermondtova matice bude vypadat takto:
 
 ```{r include = FALSE}
-write_matex2 <- function(x) {
+write_matex2 <- function(x) 
+{
   begin <- "\\begin{bmatrix}"
   end <- "\\end{bmatrix}"
   X <-
-    apply(x, 1, function(x) {
+    apply(x, 1, function(x) 
+    {
       paste(
         paste(x, collapse = "&"),
         "\\\\"
@@ -255,13 +262,17 @@ $$L_i=\prod_{i=0, i\neq j}^n \frac{x-x_i}{x_j-x_i}$$
 
 ```{r include=TRUE}
 #xs a ys jsou zname body funkce, x jsou hledane body
-lagrangeInterpolation<- function(x, xs, ys){
+lagrangeInterpolation<- function(x, xs, ys)
+{
   n <- length(xs)
   sum <- 0
-  for(i in 1:n){
+  for(i in 1:n)
+  {
     pie <- 1 #pi je 1 pro vypocet dalsiho Li(x)
-    for(j in 1:n){
-      if(i != j){
+    for(j in 1:n)
+    {
+      if(i != j)
+      {
         #vypočítáme fundamentální polynom Li(x)
         pie<- pie * (x - xs[j])/(xs[i] - xs[j])
       }
@@ -273,4 +284,72 @@ lagrangeInterpolation<- function(x, xs, ys){
 }
 ```
 
+## Newtonova interpolace
 
+Newtonova interpolace nebo také jako Newtonova metoda poměrných diferencí je interpolační polynom zapsaný ve tvaru:
+
+$$N_n(x) = a_0 + a_1(x-x_0) + a_2(x-x_0)(x-x_1) + ... + a_n(x-x_0)(x-x_1)...(x-x_{n-1})$$
+
+Přičemž k vytvoření polynomu musejí být nalezeny konstanty $a_0$, $a_1,...,a_n$. K nalezení těchto konstant jsou potřeba poměrné diference, které jsou rekursivně generovány, dokud neproběhne $n$ iterací.
+Začíná se s nultou poměrnou diferencí funkce $f$ vzhledem k $x_i$, což je hodnota $f$ v tomto bodě. Hranaté závorky jsou zavedeny, aby jsme odlišili poměrnou diferenci.
+
+$$f[x_i]=f(x_i)$$
+
+
+Pak začneme rekursivní volání poměrných diferencí. Na řadě je první poměrná diference k hodnotě $x_i$ a $x_{i+1}$ ve tvaru:
+
+$$f[x_i, x_{i+1}]= \frac{f[x_{i+1}]-f[x_i]} {x_{i+1}-x_i}$$
+
+Následuje druhá poměrná diference:
+
+$$f[x_i, x_{i+1}, x_{i+2}]= \frac{f[x_{i+1}, x_{i+2}]-f[x_i,x_{i+1}]} {x_{i+2}-x_i}$$
+
+a takto pak iterace pokračuje až do $n$té poměrné diference:
+
+$$f[x_0,x_1,...x_n] = \frac{f[x_1,x_2,...,x_n] - f[x_0,x_1,...x_{n-1}]} {x_n-x_0}$$
+
+Interpolační polynom pak se znázorněnými poměrnými diferenci vypadá takto:
+
+$$N_n(x) = f[x_0] + f[x_0,x_1](x-x_0) + f[x_0,x_1,x_2](x-x_0)(x-x_1) + ... + f[x_0,x_1,...,x_n](x-x_0)(x-x_1)...(x-x_{n-1})$$
+
+\
+
+Pro lepší názornost je níže zobrazen strom výpočtu poměrných diferencí.
+
+![Zdroj obrázku: https://ece.uwaterloo.ca/~dwharder/NumericalAnalysis/05Interpolation/newton/images/p4.colour.png](https://ece.uwaterloo.ca/~dwharder/NumericalAnalysis/05Interpolation/newton/images/p4.colour.png)
+
+
+### Algoritmus výpočtu
+
+```{r include = TRUE}
+divDiff <- function(xs, ys, x)
+{
+  n <- length(xs)
+  q <- matrix(data = 0, n, n)  #q - iniciace matice pomernych diferenci
+  q[,1] <- ys   
+  f <- q[1,1]
+  
+  for (i in 2:n)
+  {
+    fi <- 1
+    for (j in i:n) 
+    {
+      q[j,i] <- (q[j,i-1] - q[j-1,i-1]) / (xs[j] - xs[j-i+1])  #spocita diferenci
+        
+      if (j==i) #vybere diference do rovnice (diagonala matice)
+      { 
+      
+        for(k in 1:(j-1))
+        {
+          fi <- fi*(x - xs[k])   #spocte zavorky
+        }
+        fi <- q[i,j] * fi    #vynasobi s diferenci
+      }
+    }
+      f <- f + fi #prida k celku rovnice
+  }
+  res <- list(f,q)
+  names(res) <- c("y","diff")
+  return(res)    #vraci list s interpolaci a matici diferenci
+}
+```

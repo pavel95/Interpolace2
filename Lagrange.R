@@ -1,11 +1,15 @@
 #xs a ys jsou zname body funkce, x jsou hledane body
-lagrangeInterpolation<- function(x, xs, ys){
+lagrangeInterpolation<- function(x, xs, ys)
+{
   n <- length(xs)
   sum <- 0
-  for(i in 1:n){
+  for(i in 1:n)
+  {
     pie <- 1 #pi je 1 pro vypocet dalsiho Li(x)
-    for(j in 1:n){
-      if(i != j){
+    for(j in 1:n)
+    {
+      if(i != j)
+      {
         #vypoèítáme fundamentální polynom Li(x)
         pie<- pie * (x - xs[j])/(xs[i] - xs[j])
       }
