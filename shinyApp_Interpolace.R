@@ -173,7 +173,7 @@ server <- function(input, output, session){
   
   output$vMatrix <- renderTable({
     V <- vandermonde.matrix(xsr(), length(xsr()))
-    colnames(V) <- paste0("X^",(1:ncol(A))-1)
+    colnames(V) <- paste0("X^",(1:ncol(V))-1)
     V
   })
   
@@ -181,7 +181,7 @@ server <- function(input, output, session){
     
     res <- divDiff(xsr(),ysr(),xr())
     y <- res[["y"]]
-    yreal <- sin(x)
+    yreal <- sin(xr())
     
     #graf
     plot(xr(),y,type="l", main = paste("n=",input$points))  #Newton 
