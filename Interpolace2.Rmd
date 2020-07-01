@@ -4,7 +4,7 @@ output: "html_document"
 ---
 ## Polynom
 
-Polynom stupně n je mnohočlen zapsaný ve tvaru:
+Polynom stupně $n$ je mnohočlen zapsaný ve tvaru:
 $$p(x)=a_n x^n + a_{n-1} x^{n-1} +...+a_2x^2 + a_1x + a_0$$
 kde $x$ je proměnná a čísla $a_i$ jsou koeficienty polynomu $(a_n \neq 0).$ Koeficienty polynomu jsou zpravidla celá nebo reálná čísla. Stupněm polynomu $p(x)$ rozumíme nejvyšší exponent proměnné $x$ s nenulovým koeficientem.
 U následujících interpolačních metod platí, že pokud známe $n$ bodů, z výpočtu dostaneme interpolační polynom stupně $n-1$.

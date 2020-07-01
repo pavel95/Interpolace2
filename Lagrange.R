@@ -38,6 +38,6 @@ plot(x,y,type="l")  #lagrange
 points(xs,ys,col="red")   #zname body
 lines(x,yreal,col="green")    #realna funkce
 
-legend(x=6.3,y=2.8,c("Lagrange","Zadana funkce","Zname body"),
+legend(x="topright",c("Lagrange","Zadana funkce","Zname body"),
        cex=.8,col=c("black","green","red"), lty=c(1,1,0), pch=c(-1,-1,1))
 

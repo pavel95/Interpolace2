@@ -7,9 +7,9 @@ ui <- fluidPage(
     
     sidebarPanel(
       splitLayout(
-        numericInput('from','od',-10), numericInput('to','do',10)
+        numericInput('from','od',-5), numericInput('to','do',5)
       ),
-      numericInput('points','Počet známých bodů',15),
+      numericInput('points','Počet známých bodů',11),
       selectInput("funkce", label = "Funkce", 
                   choices = list("sin" = "sin", "cos" = "cos", "e^x" = "e^x", "x^2" = "x^2", "x^3" = "x^3"), 
                   selected = "sin"),
@@ -17,10 +17,10 @@ ui <- fluidPage(
     
     mainPanel(
       tabsetPanel(
-        tabPanel(
-          "Vandermonde", plotOutput("vandermondePlot"), 
-          hr(), titlePanel("Vandermondova matice"), tableOutput("vMatrix")), 
+
         tabPanel("Lagrange", plotOutput("lagrangePlot")),
+        tabPanel("Vandermonde", plotOutput("vandermondePlot"), 
+                 hr(), titlePanel("Vandermondova matice"), tableOutput("vMatrix")),
         tabPanel("Newton", plotOutput("newtonPlot"), 
                  hr(), titlePanel("Matice poměrných diferencí"), verbatimTextOutput("diffMatrix2"))
       )
@@ -172,7 +172,9 @@ server <- function(input, output, session){
   })
   
   output$vMatrix <- renderTable({
-    vandermonde.matrix(xsr(), length(xsr()))
+    V <- vandermonde.matrix(xsr(), length(xsr()))
+    colnames(V) <- paste0("X^",(1:ncol(A))-1)
+    V
   })
   
   output$newtonPlot <- renderPlot({
