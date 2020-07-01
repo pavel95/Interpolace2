@@ -12,7 +12,7 @@ Takže pokud známe 2 body provádíme interpolaci přímkou, pokud známe body 
 
 ## Interpolace
 
-Interpolaci používáme pokud máme nějakou funkci zadanou určitými body a chceme zjistit jak by se tato funkce mezi těmito body chovala. Např. pokud máme funkci $f(x)$ a známe její hodnotu v bodech $f(x_0), f(x_1),..f(x_n)$ interpolací nalezneme funkční hodnoty $f(x)$, pokud platí, že $x_0 < x < x_n$. Existuje několik metod pro výpočet interpolačních polynomů, které si dále popíšeme. Cílem je aby tento polynom napodoboval původní funkci. Obecně platí čím více bodů známe a dosadíme do výpočtu, tím přesnější interpolaci získáme, jak je předvedeno dále na grafech s n známými body.
+Interpolaci používáme pokud máme nějakou funkci zadanou určitými body a chceme zjistit jak by se tato funkce mezi těmito body chovala. Např. pokud máme funkci $f(x)$ a známe její hodnotu v bodech $f(x_0), f(x_1),..f(x_n)$ interpolací nalezneme funkční hodnoty $f(x)$, pokud platí, že $x_0 < x < x_n$. Existuje několik metod pro výpočet interpolačních polynomů, které si dále popíšeme. Cílem je aby tento polynom napodoboval původní funkci. Obecně platí, že pokud dosadíme dostatek bodů do výpočtu, získáme přesnější interpolaci, jak je předvedeno dále na grafech s $n$ známými body.
 
 ```{r echo=FALSE}
 #xs a ys jsou zname body funkce, x jsou hledane body
@@ -127,7 +127,7 @@ takže platí
 
 $$V_{ij}=x_i^{j-1}$$
 
-Vandermodovo matici můžeme využit k získání interpolačního polynomu. Ze souřadnic osy x známých bodů sestavíme Vandermondovo matici a tu pak položíme rovnu souřadnicím osy y těchto bodů. Tímto procesem získáme funkci, která musí procházet zadanými body. Výsledkem jsou koeficienty interpolačního polynomu. Pro počítání a dosazování za x v interpolačním polynomu můžeme použít Hornerovo schéma, pro jednodužší a rychlejší výpočet. Stručně řečeno se jedná o opakované vytknutí neznámé.
+Vandermodovo matici můžeme využit k získání interpolačního polynomu. Ze souřadnic osy x známých bodů sestavíme Vandermondovo matici a tu pak položíme rovnu souřadnicím osy y těchto bodů. Tímto procesem získáme funkci, která musí procházet zadanými body. Výsledkem jsou koeficienty interpolačního polynomu. Pro počítání a dosazování za $x$ v interpolačním polynomu můžeme použít Hornerovo schéma, pro jednodužší a rychlejší výpočet. Stručně řečeno se jedná o opakované vytknutí neznámé.
 
 $$
 \begin{bmatrix}

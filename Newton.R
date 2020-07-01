@@ -34,6 +34,7 @@ ys <- cos(xs2)
 x <- seq(-10,10, by = 0.1)
 res <- divDiff(xs2,ys2,x2)
 y <- res[["y"]]
+diff <- res[["diff"]]
 yreal <- cos(x2)
 
 #graf
